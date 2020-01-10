@@ -1,0 +1,88 @@
+function getGeneration(cells, generations){
+let result = cloneCells(cells);
+console.log('cloned cells : ',result);
+for(let n=0 ; n<generations ; n++){
+console.log('generation : ',n)
+result = createNextGeneration(result);
+}
+return cropResult(result);
+}
+
+function createNextGeneration (cells){
+let nextGen = [];
+for(let i=0 ; i<cells.length ; i++){
+    nextGen.push([]);
+    for(let j=0; j<cells[0].length;j++){
+    nextGen[i].push( determineStatus(cells[i][j],calculatePopulation(cells,i,j)) );
+    }
+    
+}
+return nextGen;
+}
+
+function calculatePopulation (cells,i,j) {
+let rows = cells.length , cols = cells[0].length;
+let pop = 0;
+for(let currRow = i-1 ; currRow < i+2 ; currRow++){
+    for(let currCol = j-1 ; currCol < j+2 ; currCol++){
+    if(currRow >= rows || currRow < 0 || currCol>=cols || currCol < 0 ){
+     }else {
+     pop+=cells[currRow][currCol];}
+     }
+  }
+return pop-cells[i][j];
+}
+
+function determineStatus (cellStatus , population ){
+switch (population){
+case 0:
+case 1: return 0;
+case 2:return cellStatus;
+case 3:return 1;
+default:return 0;
+}
+return 'error';
+}
+
+function cropResult (nextGen){
+console.log(nextGen);
+let rows = nextGen.length , cols = nextGen[0].length , flag=0;
+for(let currRow = 0 ; currRow < rows ; currRow++){
+  if(!nextGen[currRow].includes(1)){
+  console.log('Removing row',currRow);
+  nextGen.splice(currRow,1)
+  rows--;
+  currRow--;
+  }
+}
+for(let currCol = 0 ; currCol < cols ; currCol++){
+flag=0;
+  for(let currRow = 0 ; currRow < rows ; currRow++){
+    if(nextGen[currRow][currCol] === 1){
+    flag = 1;
+    }
+  }
+  if(flag===0){
+    console.log('Removing col',currCol);
+    removeCol(nextGen,currCol)
+    cols--;
+    currCol--;
+    } 
+}
+return nextGen;
+}
+
+function removeCol (gridArr,targetCol){
+for(let i = 0 ; i<gridArr.length ; i++){
+gridArr[0].splice (targetCol,1)
+}
+}
+
+function cloneCells (cells){
+let clonedCells = [];
+cells.forEach(ele => {
+let clonedRow = [...ele];
+clonedCells.push(clonedRow)
+})
+return clonedCells;
+}
