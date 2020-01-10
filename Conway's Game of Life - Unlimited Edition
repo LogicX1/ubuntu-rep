@@ -1,11 +1,12 @@
 function getGeneration(cells, generations){
 let result = cloneCells(cells);
-console.log('cloned cells : ',result);
 for(let n=0 ; n<generations ; n++){
+addBorder(result);
 console.log('generation : ',n)
-result = createNextGeneration(result);
+console.log('current generation',result)
+result = cropResult(createNextGeneration(result));
 }
-return cropResult(result);
+return result;
 }
 
 function createNextGeneration (cells){
@@ -68,13 +69,15 @@ flag=0;
     cols--;
     currCol--;
     } 
+    console.log('after removinging col #',currCol)
+    console.log(nextGen);
 }
 return nextGen;
 }
 
 function removeCol (gridArr,targetCol){
 for(let i = 0 ; i<gridArr.length ; i++){
-gridArr[0].splice (targetCol,1)
+gridArr[i].splice (targetCol,1)
 }
 }
 
@@ -84,5 +87,17 @@ cells.forEach(ele => {
 let clonedRow = [...ele];
 clonedCells.push(clonedRow)
 })
+return clonedCells;
+}
+
+function addBorder (clonedCells) {
+clonedCells.forEach(a=>{
+a.push(0);
+a.unshift(0);
+})
+let zeroRow =[]; 
+clonedCells[0].forEach(a => zeroRow.push(0));
+clonedCells.push(zeroRow);
+clonedCells.unshift(zeroRow);
 return clonedCells;
 }
